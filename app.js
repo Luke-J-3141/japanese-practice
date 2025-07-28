@@ -34,7 +34,7 @@ function JapaneseVocabApp() {
     );
 }
 
-// Navigation Component
+// Navigation Component with Centered Buttons
 function Navigation({ currentView, setCurrentView }) {
     const views = [
         { id: 'dictionary', name: 'Dictionary' },
@@ -45,21 +45,21 @@ function Navigation({ currentView, setCurrentView }) {
 
     return (
         <nav className="bg-gray-800 shadow-sm rounded-lg p-4">
-        <div className="flex flex-wrap gap-2 sm:space-x-4 sm:gap-0">
-            {views.map(view => (
-            <button
-                key={view.id}
-                onClick={() => setCurrentView(view.id)}
-                className={`px-3 py-2 sm:px-4 rounded-md font-medium transition-colors text-sm sm:text-base flex-1 sm:flex-none ${
-                currentView === view.id
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
-                }`}
-            >
-                {view.name}
-            </button>
-            ))}
-        </div>
+            <div className="flex flex-wrap justify-center gap-2 sm:space-x-4 sm:gap-0">
+                {views.map(view => (
+                    <button
+                        key={view.id}
+                        onClick={() => setCurrentView(view.id)}
+                        className={`px-3 py-2 sm:px-4 rounded-md font-medium transition-colors text-sm sm:text-base ${
+                            currentView === view.id
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                        }`}
+                    >
+                        {view.name}
+                    </button>
+                ))}
+            </div>
         </nav>
     );
 }
