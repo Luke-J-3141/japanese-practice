@@ -82,8 +82,8 @@ function Quiz({ words }) {
                 { question: `${word.english} (te-form)`, answer: conjugations.teForm, type: 'conjugation' }
                 );
                 if (conjugations.potential) {
-                possibleQuestions.push({ question: `${word.english} (can/potential)`, answer: conjugations.potential, type: 'conjugation' });
-                }
+                    possibleQuestions.push({ question: `${word.english} (can/potential)`, answer: conjugations.potential, type: 'conjugation' });
+                    }
             }
             
             if (word.wordType === 'i-adjective') {
@@ -105,10 +105,10 @@ function Quiz({ words }) {
         
         // Randomly select one of the possible questions
         if (possibleQuestions.length > 0) {
-        const selectedQuestion = possibleQuestions[Math.floor(Math.random() * possibleQuestions.length)];
-        setCurrentQuestion({ ...selectedQuestion, word });
+            const selectedQuestion = possibleQuestions[Math.floor(Math.random() * possibleQuestions.length)];
+            setCurrentQuestion({ ...selectedQuestion, word });
         } else {
-        setCurrentQuestion(null);
+            setCurrentQuestion(null);
         }
         
         setUserAnswer('');
@@ -139,6 +139,7 @@ function Quiz({ words }) {
 
     const nextQuestion = () => {
         generateQuestion();
+        playSound();
     };
 
     const resetQuiz = () => {
@@ -146,6 +147,48 @@ function Quiz({ words }) {
         setQuestionsAnswered(0);
         setFeedback('');
         generateQuestion();
+    };
+
+    const playSound = () => {
+        if (!currentQuestion) return;
+        
+        const utterance = new SpeechSynthesisUtterance();
+
+        // Check if the question is in Japanese (kanji, hiragana, katakana, or romaji)
+        const isJapaneseQuestion = quizMode.startsWith('kanji-to') || 
+                                  quizMode.startsWith('hiragana-to') || 
+                                  quizMode.startsWith('katakana-to') || 
+                                  quizMode.startsWith('romaji-to');
+
+        if (isJapaneseQuestion) {
+            utterance.text = currentQuestion.question;
+            utterance.lang = 'ja-JP';
+            utterance.rate = 0.8; // Slower for better clarity
+            utterance.pitch = 1.0;
+            
+            // Try to select a specific Japanese voice
+            const voices = speechSynthesis.getVoices();
+            const japaneseVoice = voices.find(voice => 
+                voice.lang.includes('ja') && voice.name.includes('Google')
+            );
+            if (japaneseVoice) utterance.voice = japaneseVoice;
+            
+        } else {
+            utterance.text = currentQuestion.question;
+            utterance.lang = 'en-US';
+            utterance.rate = 1.3;
+            utterance.pitch = 1.0;
+            
+            // Select a natural-sounding English voice
+            const voices = speechSynthesis.getVoices();
+            const englishVoice = voices.find(voice => 
+                voice.lang.includes('en-US') && 
+                (voice.name.includes('Google') || voice.name.includes('Microsoft'))
+            );
+            if (englishVoice) utterance.voice = englishVoice;
+        }
+        
+        speechSynthesis.speak(utterance);
     };
 
     useEffect(() => {
@@ -185,6 +228,12 @@ function Quiz({ words }) {
                 className="px-3 py-2 bg-gray-700 text-gray-200 rounded-md hover:bg-gray-600 transition-colors text-sm"
                 >
                 Reset Score
+                </button>
+                <button
+                onClick={playSound}
+                className="px-3 py-2 bg-gray-700 text-gray-200 rounded-md hover:bg-gray-600 transition-colors text-sm"
+                >
+                Play Sound
                 </button>
             </div>
             </div>
