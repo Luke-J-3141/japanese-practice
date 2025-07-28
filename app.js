@@ -15,6 +15,9 @@ function JapaneseVocabApp() {
             
             {/* Main Content */}
             <div className="mt-6">
+            {currentView === 'character' && (
+                <CharacterPractice />
+            )}
             {currentView === 'dictionary' && (
                 <Dictionary 
                 words={vocabularyData} 
