@@ -332,7 +332,7 @@ def main():
     
     # Load dictionary (limit to 1000 entries for demo)
     print("Loading JMDict JSON (demo limited to 1000 entries)...")
-    if reader.load_jmdict_json(limit=1000):
+    if reader.load_jmdict_json():
         
         # Example searches
         test_queries = ["犬", "dog", "食べる", "eat", "本", "book"]
@@ -342,7 +342,7 @@ def main():
             print("\n" + "-"*50)
         
         # Export data for quiz app
-        reader.export_for_quiz_app("sample_quiz_data.json")
+        reader.export_for_quiz_app("./word_data.json")
         
         # Show random entries
         print("\n" + "="*60)
@@ -352,8 +352,8 @@ def main():
             reader.display_entry(entry)
         
         # Interactive search
-        print("\nInteractive search (type 'quit' to exit):")
-        while True:
+        # print("\nInteractive search (type 'quit' to exit):")
+        while False:
             query = input("\nEnter search term: ").strip()
             if query.lower() == 'quit':
                 break
